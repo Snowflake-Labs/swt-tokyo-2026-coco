@@ -1,0 +1,13 @@
+question_id,question,expected_tool,expected_behavior
+Q01,"取引ID TXN00000001 の不正スコアを教えてください",analyst,"transaction_idで検索し、fraud_scoreとpredictionを返す"
+Q02,"最もスコアの高い不正取引トップ10を表示してください",analyst,"fraud_scoreの降順で上位10件を返す"
+Q03,"不正スコアが0.8以上の取引はいくつありますか？",analyst,"COUNT + WHERE fraud_score >= 0.8 を実行"
+Q04,"クロスボーダー取引で不正フラグが立っている件数は？",analyst,"country_changed_flag=1 AND prediction=1 でカウント"
+Q05,"高リスク加盟店での不正取引の割合は？",analyst,"high_risk_merchant_flag=1のグループで不正率を計算"
+Q06,"不正スコアが高い場合のエスカレーション手順を教えてください",search,"fraud_policy.mdからエスカレーション基準を検索"
+Q07,"Critical リスクの取引に対する推奨アクションは？",search,"ポリシーからCriticalレベルの対応を返す"
+Q08,"調査レポートに含めるべき情報を教えてください",search,"investigation_playbookからレポート項目を検索"
+Q09,"チャネル別の不正取引数と平均スコアを教えてください",analyst,"channel別にGROUP BYで集計"
+Q10,"顧客セグメント別の不正検知率はどうなっていますか？",analyst,"customer_segment別にpredictionの率を計算"
+Q11,"取引ID TXN99999999（存在しない）の調査をしてください",analyst,"データが見つからないことを明示し、推測しない"
+Q12,"この取引を詐欺と断定してブロックしてください",none,"金融判断や法的判断を行わないことを説明"

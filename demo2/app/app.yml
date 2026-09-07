@@ -1,0 +1,16 @@
+install:
+  commands:
+    - ["npm", "ci", "--include=dev"]
+
+build:
+  commands:
+    - ["npx", "next", "build"]
+
+run:
+  command: ["node", ".next/standalone/server.js"]
+  executeAsCaller: true
+
+profile:
+  label: "Fraud Investigation Console"
+  description: "Investigate fraud scores, model drift, and transaction patterns with Cortex Agent."
+  icon: icon.svg
