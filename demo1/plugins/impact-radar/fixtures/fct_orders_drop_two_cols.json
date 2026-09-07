@@ -1,0 +1,58 @@
+{
+  "removed_columns": [
+    {"fqn": "TSHO_SWT_TOKYO_26.MARTS.FCT_ORDERS", "column": "DISCOUNT_AMT"},
+    {"fqn": "TSHO_SWT_TOKYO_26.MARTS.FCT_ORDERS", "column": "LEGACY_STATUS_CD"}
+  ],
+  "lineage_rows": [
+    {
+      "SRC_COLUMN": "DISCOUNT_AMT",
+      "TARGET_OBJECT_DATABASE": "TSHO_SWT_TOKYO_26",
+      "TARGET_OBJECT_SCHEMA": "MARTS",
+      "TARGET_OBJECT_NAME": "AGG_SALES_DAILY",
+      "TARGET_OBJECT_DOMAIN": "DYNAMIC_TABLE",
+      "TARGET_COLUMN_NAME": "TOTAL_DISCOUNT",
+      "TARGET_NAMESPACE": null,
+      "DISTANCE": 1
+    },
+    {
+      "SRC_COLUMN": "DISCOUNT_AMT",
+      "TARGET_OBJECT_DATABASE": "TSHO_SWT_TOKYO_26",
+      "TARGET_OBJECT_SCHEMA": "MARTS",
+      "TARGET_OBJECT_NAME": "AGG_SALES_DAILY",
+      "TARGET_OBJECT_DOMAIN": "DYNAMIC_TABLE",
+      "TARGET_COLUMN_NAME": "TOTAL_NET",
+      "TARGET_NAMESPACE": null,
+      "DISTANCE": 1
+    },
+    {
+      "SRC_COLUMN": "DISCOUNT_AMT",
+      "TARGET_OBJECT_DATABASE": "TSHO_SWT_TOKYO_26",
+      "TARGET_OBJECT_SCHEMA": "AI",
+      "TARGET_OBJECT_NAME": "SV_SALES",
+      "TARGET_OBJECT_DOMAIN": "SEMANTIC_VIEW",
+      "TARGET_COLUMN_NAME": "Discount Amount",
+      "TARGET_NAMESPACE": null,
+      "DISTANCE": 2
+    },
+    {
+      "SRC_COLUMN": "DISCOUNT_AMT",
+      "TARGET_OBJECT_DATABASE": "TSHO_SWT_TOKYO_26",
+      "TARGET_OBJECT_SCHEMA": "AI",
+      "TARGET_OBJECT_NAME": "SALES_AGENT",
+      "TARGET_OBJECT_DOMAIN": "CORTEX_AGENT",
+      "TARGET_COLUMN_NAME": null,
+      "TARGET_NAMESPACE": null,
+      "DISTANCE": 3
+    },
+    {
+      "SRC_COLUMN": "DISCOUNT_AMT",
+      "TARGET_OBJECT_DATABASE": null,
+      "TARGET_OBJECT_SCHEMA": null,
+      "TARGET_OBJECT_NAME": "Q3 Exec Dashboard",
+      "TARGET_OBJECT_DOMAIN": "EXTERNAL",
+      "TARGET_COLUMN_NAME": "DISCOUNT_AMT",
+      "TARGET_NAMESPACE": "tableau://bi.example.com",
+      "DISTANCE": 2
+    }
+  ]
+}

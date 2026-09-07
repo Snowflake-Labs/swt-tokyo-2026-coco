@@ -1,0 +1,24 @@
+{
+  "hooks": [
+    {
+      "event": "pre-tool-call",
+      "description": "Block destructive SQL - Impact Radar is read-only",
+      "match": {
+        "tool": "snowflake_sql_execute",
+        "pattern": "(DROP|DELETE|TRUNCATE|CREATE\\s+OR\\s+REPLACE|INSERT|UPDATE|MERGE)"
+      },
+      "action": "block",
+      "message": "Impact Radar is read-only. It only uses GET_LINEAGE and git diff."
+    },
+    {
+      "event": "pre-tool-call",
+      "description": "Block secret/credential file reads",
+      "match": {
+        "tool": "read",
+        "pattern": "(\\.env$|connections\\.toml|\\.pem$|credentials)"
+      },
+      "action": "block",
+      "message": "Reading credential files is not allowed."
+    }
+  ]
+}
