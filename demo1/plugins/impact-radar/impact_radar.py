@@ -157,7 +157,11 @@ class ImpactResult:
 
 
 def get_staged_sql_diff() -> str:
-    """Return the ``git diff --staged`` output limited to ``*.sql`` files."""
+    """Return the ``git diff --staged`` output limited to ``*.sql`` files.
+
+    Returns:
+        Unified diff text for all staged SQL files, or empty string if none.
+    """
     result = subprocess.run(
         ["git", "diff", "--staged", "--", "*.sql"],
         capture_output=True,
@@ -199,6 +203,13 @@ def _extract_identifiers(line: str) -> set[str]:
     """Extract SQL column-like identifiers from a single diff line.
 
     SQL keywords are excluded so that only user-defined names remain.
+
+    Args:
+        line: A single diff line (str) without the leading ``+``/``-`` prefix.
+
+    Returns:
+        set[str]: Upper-cased SQL identifier names found in the line,
+        excluding SQL keywords.
     """
     cleaned = re.sub(r"--.*$", "", line).strip()
     if not cleaned:
