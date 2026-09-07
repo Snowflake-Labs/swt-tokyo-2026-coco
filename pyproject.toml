@@ -1,0 +1,46 @@
+[project]
+name = "swt-tokyo-2026-coco"
+version = "0.1.0"
+description = "CoCo × Iceberg × Agentic ML fraud detection demo"
+requires-python = ">=3.10"
+dependencies = [
+    "snowflake-snowpark-python>=1.23.0",
+    "snowflake-ml-python>=1.7.0",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+notebook = [
+    "jupyter>=1.0",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0",
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+exclude = ["demo2/scripts/run_setup.py", "demo2/scripts/validate_setup.py", "demo2/scripts/smoke_test.py", "demo2/scripts/upload_data.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "D", "UP", "ANN"]
+ignore = ["D100", "D104", "D301", "D103", "ANN001", "ANN201", "E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/*.ipynb" = ["E501", "D", "ANN"]
+"demo2/scripts/*.py" = ["D", "ANN"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

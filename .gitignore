@@ -1,0 +1,32 @@
+# Environment
+.env
+*.pem
+connections.toml
+
+# Python / uv
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+dist/
+*.egg-info/
+uv.lock
+
+# Generated data (regenerate with: python scripts/generate_synthetic_data.py)
+data/synthetic/*.parquet
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Snowflake
+.snowflake/
+
+# Demo runbooks and prompts (internal only)
+**/demo/runbook.md
+**/demo/live_prompts.md

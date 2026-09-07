@@ -1,0 +1,23 @@
+definition_version: "2"
+
+entities:
+  fraud_investigation_console:
+    type: snowflake-app
+    identifier:
+      name: FRAUD_INVESTIGATION_CONSOLE
+      database: SNOWFLAKE_APPS
+      schema: PUBLIC
+    artifacts:
+      - src: ./*
+        dest: ./
+        ignore:
+          - node_modules
+          - .env*
+          - __pycache__
+          - "*.pyc"
+          - .next
+          - .git
+          - snowflake.log
+
+    query_warehouse: SNOWFLAKE_APPS_QUERY_WH
+    code_stage: FRAUD_INVESTIGATION_CONSOLE_CODE

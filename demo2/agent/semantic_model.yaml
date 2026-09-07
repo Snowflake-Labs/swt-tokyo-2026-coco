@@ -1,0 +1,161 @@
+name: fraud_detection_model
+model:
+  database: TSHO_SWT_TOKYO_26
+  schema: FRAUD
+  description: >
+    Fraud detection semantic model for Cortex Analyst.
+    Provides access to transaction fraud scores and enriched features.
+
+tables:
+  - name: FRAUD_SCORES_ENRICHED
+    description: >
+      Enriched fraud scores combining model predictions with transaction features
+      and customer/merchant attributes.
+    base_table:
+      database: TSHO_SWT_TOKYO_26
+      schema: FRAUD
+      table: FRAUD_SCORES_ENRICHED
+    columns:
+      - name: TRANSACTION_ID
+        description: Unique transaction identifier (e.g. TXN00000001)
+        data_type: VARCHAR
+        is_primary_key: true
+      - name: CUSTOMER_ID
+        description: Customer UUID
+        data_type: VARCHAR
+      - name: FRAUD_SCORE
+        description: Model predicted fraud probability from 0 (legitimate) to 1 (fraudulent)
+        data_type: FLOAT
+      - name: PREDICTION
+        description: Binary fraud prediction. 0 = legitimate, 1 = fraud
+        data_type: NUMBER
+      - name: MODEL_VERSION
+        description: Version of the model that produced this score
+        data_type: VARCHAR
+      - name: THRESHOLD
+        description: Classification threshold used for prediction
+        data_type: FLOAT
+      - name: SCORED_AT
+        description: Timestamp when the score was generated
+        data_type: TIMESTAMP_NTZ
+      - name: AMOUNT
+        description: Transaction amount in local currency
+        data_type: FLOAT
+      - name: TXN_COUNTRY
+        description: Country where the transaction occurred
+        data_type: VARCHAR
+      - name: CHANNEL
+        description: Transaction channel (web, mobile, pos, atm)
+        data_type: VARCHAR
+      - name: CUSTOMER_COUNTRY
+        description: Customer's registered country
+        data_type: VARCHAR
+      - name: ACCOUNT_AGE_DAYS
+        description: Number of days since customer account creation
+        data_type: NUMBER
+      - name: CUSTOMER_SEGMENT
+        description: Customer segment (individual, premium, business, student)
+        data_type: VARCHAR
+      - name: MERCHANT_CATEGORY
+        description: Merchant business category
+        data_type: VARCHAR
+      - name: MERCHANT_RISK_LEVEL
+        description: Merchant risk classification (low, medium, high)
+        data_type: VARCHAR
+      - name: COUNTRY_CHANGED_FLAG
+        description: 1 if transaction country differs from customer country, 0 otherwise
+        data_type: NUMBER
+      - name: HIGH_RISK_MERCHANT_FLAG
+        description: 1 if merchant risk level is high, 0 otherwise
+        data_type: NUMBER
+      - name: TXN_COUNT_1H
+        description: Number of transactions by same customer in past 1 hour
+        data_type: NUMBER
+      - name: AMOUNT_SUM_1H
+        description: Total transaction amount by same customer in past 1 hour
+        data_type: FLOAT
+      - name: TXN_COUNT_24H
+        description: Number of transactions by same customer in past 24 hours
+        data_type: NUMBER
+      - name: AMOUNT_SUM_24H
+        description: Total transaction amount by same customer in past 24 hours
+        data_type: FLOAT
+      - name: TXN_COUNT_7D
+        description: Number of transactions by same customer in past 7 days
+        data_type: NUMBER
+      - name: AMOUNT_SUM_7D
+        description: Total transaction amount by same customer in past 7 days
+        data_type: FLOAT
+
+verified_queries:
+  - name: lookup_transaction_fraud_score
+    question: "What is the fraud score for transaction TXN00000001?"
+    sql: |
+      SELECT
+        transaction_id,
+        fraud_score,
+        prediction,
+        amount,
+        txn_country,
+        channel,
+        merchant_category,
+        merchant_risk_level,
+        country_changed_flag,
+        high_risk_merchant_flag,
+        model_version,
+        threshold
+      FROM FRAUD_SCORES_ENRICHED
+      WHERE transaction_id = 'TXN00000001'
+    verified_by: demo
+    verified_at: "2025-06-01"
+
+  - name: high_risk_transactions
+    question: "Show me the top 10 highest fraud score transactions"
+    sql: |
+      SELECT
+        transaction_id,
+        customer_id,
+        fraud_score,
+        amount,
+        txn_country,
+        channel,
+        country_changed_flag,
+        high_risk_merchant_flag
+      FROM FRAUD_SCORES_ENRICHED
+      ORDER BY fraud_score DESC
+      LIMIT 10
+    verified_by: demo
+    verified_at: "2025-06-01"
+
+  - name: fraud_summary_by_channel
+    question: "How many flagged transactions are there per channel?"
+    sql: |
+      SELECT
+        channel,
+        COUNT(*) AS total_transactions,
+        SUM(prediction) AS flagged_count,
+        AVG(fraud_score) AS avg_score
+      FROM FRAUD_SCORES_ENRICHED
+      GROUP BY channel
+      ORDER BY flagged_count DESC
+    verified_by: demo
+    verified_at: "2025-06-01"
+
+  - name: customer_risk_profile
+    question: "Show me the risk profile for a specific customer"
+    sql: |
+      SELECT
+        customer_id,
+        COUNT(*) AS total_transactions,
+        SUM(prediction) AS flagged_count,
+        AVG(fraud_score) AS avg_score,
+        MAX(fraud_score) AS max_score,
+        SUM(amount) AS total_amount,
+        MAX(txn_count_24h) AS max_txn_count_24h
+      FROM FRAUD_SCORES_ENRICHED
+      GROUP BY customer_id
+      HAVING flagged_count > 0
+      ORDER BY avg_score DESC
+      LIMIT 20
+    verified_by: demo
+    verified_at: "2025-06-01"
