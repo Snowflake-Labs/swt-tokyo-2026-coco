@@ -1,6 +1,9 @@
-# impact-check
+---
+name: impact-check
+description: "git add 済み SQL の列削除を検出し、GET_LINEAGE で下流影響を分析する。Triggers: impact check, impact radar, column removal check, lineage impact, downstream impact, 影響分析, 下流影響."
+---
 
-user-invocable: true
+# impact-check
 
 git add 済み SQL の列削除を検出し、GET_LINEAGE で下流影響を分析する。
 
