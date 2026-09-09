@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sql=$(cat | jq -r '.tool_input.sql // empty' 2>/dev/null) && [ -z \"$sql\" ] && exit 0; normalized=$(printf '%s' \"$sql\" | sed \"s|/\\*[^*]*\\*/||g; s|--[^\\n]*||g\" | tr '\\n\\t' '  ' | tr -s ' ' | tr '[:lower:]' '[:upper:]') && printf '%s' \"$normalized\" | grep -qE '\\b(DROP|DELETE|TRUNCATE|INSERT|UPDATE|MERGE)\\b|\\bCREATE[[:space:]]+OR[[:space:]]+REPLACE\\b' && echo 'Impact Radar is read-only. It only uses GET_LINEAGE and git diff.' && exit 2 || true"
+            "command": "sql=$(cat | jq -r '.tool_input.sql // empty' 2>/dev/null) && [ -z \"$sql\" ] && exit 0; first=$(printf '%s' \"$sql\" | sed \"s|/\\*.*\\*/||g; s|--.*||g\" | tr '\\n\\t' '  ' | sed 's/^[[:space:]]*//' | tr '[:lower:]' '[:upper:]' | head -c 20) && printf '%s' \"$first\" | grep -qE '^(SELECT|SHOW|DESCRIBE|DESC|EXPLAIN|WITH|CALL[[:space:]]+SNOWFLAKE)' && exit 0; echo 'Impact Radar is read-only. Only SELECT / SHOW / DESCRIBE / WITH are allowed.' && exit 2"
           }
         ]
       },
