@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "input=$(cat) && echo \"$input\" | grep -qiE '(DROP|DELETE|TRUNCATE|CREATE\\s+OR\\s+REPLACE|INSERT|UPDATE|MERGE)' && echo 'Impact Radar is read-only. It only uses GET_LINEAGE and git diff.' && exit 2 || true"
+            "command": "sql=$(cat | jq -r '.tool_input.sql // empty' 2>/dev/null) && [ -z \"$sql\" ] && exit 0; normalized=$(printf '%s' \"$sql\" | sed \"s|/\\*[^*]*\\*/||g; s|--[^\\n]*||g\" | tr '\\n\\t' '  ' | tr -s ' ' | tr '[:lower:]' '[:upper:]') && printf '%s' \"$normalized\" | grep -qE '\\b(DROP|DELETE|TRUNCATE|INSERT|UPDATE|MERGE)\\b|\\bCREATE[[:space:]]+OR[[:space:]]+REPLACE\\b' && echo 'Impact Radar is read-only. It only uses GET_LINEAGE and git diff.' && exit 2 || true"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "input=$(cat) && echo \"$input\" | grep -qE '(\\.env\"|connections\\.toml|.pem\"|credentials)' && echo 'Reading credential files is not allowed.' && exit 2 || true"
+            "command": "fp=$(cat | jq -r '.tool_input.file_path // empty' 2>/dev/null) && [ -z \"$fp\" ] && exit 0; printf '%s' \"$fp\" | grep -qE '(\\.env$|connections\\.toml$|\\.pem$|credentials)' && echo 'Reading credential files is not allowed.' && exit 2 || true"
           }
         ]
       }
