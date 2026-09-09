@@ -1,23 +1,5 @@
 {
   "name": "impact-radar",
-  "version": "0.1.0",
   "description": "CoCo Plugin that checks downstream lineage impact before committing SQL changes. Detects breakage of Semantic Views, Cortex Agents, and external BI tools.",
-  "author": "Sho Tanaka",
-  "license": "Apache-2.0",
-  "skills": "skills/",
-  "commands": "commands/",
-  "hooks": "hooks/hooks.json",
-  "permissions": {
-    "allowExternalNetwork": false,
-    "allowSecretAccess": false,
-    "allowDestructiveSQL": false
-  },
-  "environment": {
-    "requiredEnvVars": [],
-    "optionalEnvVars": [
-      "SNOWFLAKE_CONNECTION_NAME",
-      "DATABASE_NAME",
-      "WAREHOUSE_NAME"
-    ]
-  }
+  "version": "0.1.0"
 }
