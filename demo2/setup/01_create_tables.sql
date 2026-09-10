@@ -1,7 +1,7 @@
 -- =============================================================================
 -- 01_create_tables.sql
--- Staging tables + Iceberg tables in TSHO_SWT_TOKYO_26.FRAUD
--- Does NOT touch FRAUD_DEMO or any other database
+-- Managed Iceberg tables in TSHO_SWT_TOKYO_26.FRAUD (Snowflake storage)
+-- EXTERNAL_VOLUME = SNOWFLAKE_MANAGED → External Volume 設定不要
 -- =============================================================================
 
 SET database_name = 'TSHO_SWT_TOKYO_26';
@@ -13,10 +13,10 @@ USE DATABASE IDENTIFIER($database_name);
 USE SCHEMA FRAUD;
 
 -- ---------------------------------------------------------------------------
--- Raw tables (Iceberg-managed where possible, standard table fallback)
+-- Raw tables (Managed Iceberg — Snowflake storage)
 -- ---------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS RAW_TRANSACTIONS (
+CREATE ICEBERG TABLE IF NOT EXISTS RAW_TRANSACTIONS (
     transaction_id STRING,
     customer_id    STRING,
     merchant_id    STRING,
@@ -27,21 +27,30 @@ CREATE TABLE IF NOT EXISTS RAW_TRANSACTIONS (
     channel        STRING,
     device_id      STRING,
     is_fraud       INT
-) COMMENT = 'Raw transaction data for fraud demo2';
+)
+    CATALOG = 'SNOWFLAKE'
+    EXTERNAL_VOLUME = 'SNOWFLAKE_MANAGED'
+    COMMENT = 'Raw transaction data for fraud demo2 (Managed Iceberg)';
 
-CREATE TABLE IF NOT EXISTS RAW_CUSTOMER_PROFILES (
+CREATE ICEBERG TABLE IF NOT EXISTS RAW_CUSTOMER_PROFILES (
     customer_id      STRING,
     country          STRING,
     account_age_days INT,
     customer_segment STRING
-) COMMENT = 'Customer profiles for fraud demo2';
+)
+    CATALOG = 'SNOWFLAKE'
+    EXTERNAL_VOLUME = 'SNOWFLAKE_MANAGED'
+    COMMENT = 'Customer profiles for fraud demo2 (Managed Iceberg)';
 
-CREATE TABLE IF NOT EXISTS RAW_MERCHANT_PROFILES (
+CREATE ICEBERG TABLE IF NOT EXISTS RAW_MERCHANT_PROFILES (
     merchant_id       STRING,
     merchant_country  STRING,
     merchant_category STRING,
     risk_level        STRING
-) COMMENT = 'Merchant profiles for fraud demo2';
+)
+    CATALOG = 'SNOWFLAKE'
+    EXTERNAL_VOLUME = 'SNOWFLAKE_MANAGED'
+    COMMENT = 'Merchant profiles for fraud demo2 (Managed Iceberg)';
 
 -- ---------------------------------------------------------------------------
 -- Staging stage for data upload

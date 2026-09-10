@@ -277,7 +277,12 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     customers.to_parquet(args.output_dir / "customer_profiles.parquet", index=False)
     merchants.to_parquet(args.output_dir / "merchant_profiles.parquet", index=False)
-    transactions.to_parquet(args.output_dir / "transactions.parquet", index=False)
+    # Write transaction_ts as string to avoid Parquet ns timestamp precision issues with Iceberg
+    transactions_out = transactions.copy()
+    transactions_out["transaction_ts"] = transactions_out["transaction_ts"].dt.strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+    transactions_out.to_parquet(args.output_dir / "transactions.parquet", index=False)
     # Write scored_at as string to avoid Parquet timestamp precision issues with Snowflake
     prediction_log_out = prediction_log.copy()
     prediction_log_out["scored_at"] = prediction_log_out["scored_at"].dt.strftime(

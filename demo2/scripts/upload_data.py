@@ -28,6 +28,15 @@ PARQUET_FILES: dict[str, str] = {
     "prediction_log.parquet": "PREDICTION_LOG",
 }
 
+# Managed Iceberg tables: TRUNCATE and ON_ERROR not supported
+ICEBERG_TABLES: frozenset[str] = frozenset(
+    {
+        "RAW_CUSTOMER_PROFILES",
+        "RAW_MERCHANT_PROFILES",
+        "RAW_TRANSACTIONS",
+    }
+)
+
 
 def get_session() -> Session:
     """Create a Snowpark session using the configured connection."""
@@ -62,8 +71,12 @@ def upload(session: Session) -> None:
             print(f"  WARNING: Table {table_name} does not exist. Skipping.")
             continue
 
-        print(f"  TRUNCATE {table_name}")
-        session.sql(f"TRUNCATE TABLE IF EXISTS {table_name}").collect()
+        if table_name in ICEBERG_TABLES:
+            print(f"  DELETE FROM {table_name} (Iceberg)")
+            session.sql(f"DELETE FROM {table_name}").collect()
+        else:
+            print(f"  TRUNCATE {table_name}")
+            session.sql(f"TRUNCATE TABLE IF EXISTS {table_name}").collect()
         session.sql(f"REMOVE {stage}/{table_name.lower()}/").collect()
 
         print(f"  PUT {parquet_file} -> {stage}/{table_name.lower()}/")
@@ -75,14 +88,23 @@ def upload(session: Session) -> None:
         )
 
         print(f"  COPY INTO {table_name}")
-        session.sql(f"""
-            COPY INTO {table_name}
-            FROM {stage}/{table_name.lower()}/
-            FILE_FORMAT = (TYPE = PARQUET)
-            MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
-            ON_ERROR = ABORT_STATEMENT
-            FORCE = TRUE
-        """).collect()
+        if table_name in ICEBERG_TABLES:
+            session.sql(f"""
+                COPY INTO {table_name}
+                FROM {stage}/{table_name.lower()}/
+                FILE_FORMAT = (TYPE = PARQUET)
+                MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                FORCE = TRUE
+            """).collect()
+        else:
+            session.sql(f"""
+                COPY INTO {table_name}
+                FROM {stage}/{table_name.lower()}/
+                FILE_FORMAT = (TYPE = PARQUET)
+                MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+                ON_ERROR = ABORT_STATEMENT
+                FORCE = TRUE
+            """).collect()
 
         count: int = session.sql(f"SELECT COUNT(*) AS cnt FROM {table_name}").collect()[0]["CNT"]
         print(f"  {table_name}: {count} rows loaded")
