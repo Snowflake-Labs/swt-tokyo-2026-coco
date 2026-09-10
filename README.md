@@ -158,6 +158,70 @@ snow sql -c <Connection Name> -f demo2/setup/99_cleanup.sql
 
 ---
 
+## CoCo スラッシュコマンド一覧
+
+| コマンド | 説明 |
+|----------|------|
+| `/help` | 利用可能なコマンド一覧 |
+| `/changelog` | CLI のリリースノート表示 |
+| `/connections` | Snowflake 接続の確認・追加・編集・削除 |
+| `/model` | 使用するモデルの選択 |
+| `/sql-writes on\|off\|status` | SQL 書き込みの制御 |
+| `/clear` | 会話をリセット（新規セッション開始） |
+| `/cls` | 画面のみクリア（会話は維持） |
+| `/resume` | 過去セッションの復元 |
+| `/compact` | 表示モードの切り替え |
+| `/plugin` | プラグインの一覧・管理 |
+| `/agents` | バックグラウンドエージェントの管理 |
+| `/monitors` | 長時間実行プロセスの監視 |
+| `/mcp` | MCP サーバーの管理・再接続 |
+| `/docs` | Snowflake ドキュメントを開く |
+| `/index` | リポジトリ全文検索インデックス構築 |
+| `/fork` | 会話を分岐 |
+| `/rewind` | 会話を巻き戻し（Esc+u で undo） |
+| `/import-claude-config` | Claude Code の設定を取り込み |
+| `/automations` | 自動化タスクの管理 |
+
+## CoCo 主要更新 (2026年4月〜)
+
+### CoCo CLI
+
+| バージョン | 日付 | 主な更新 |
+|-----------|------|---------|
+| 1.1.65 | 2026-08-11 | Data exploration subagent、管理者向け managed settings enforcement、MCP サーバーの Snowflake 認証 |
+| 1.1.53 | — | `--private` セッション、Claude Code 設定インポート (`/import-claude-config`)、MCP OAuth authorization server override |
+| 1.1.52 | — | `cortex agent-studio` コマンド GA、MCP OAuth client secrets、subagent の model inherit |
+| 1.1.47 | — | MCP OAuth (リモート/ヘッドレス対応)、FIPS 140 モード、`/monitors` コマンド、`COCO_ADDITIONAL_QUERY_TAGS` |
+| 1.1.41 | — | Team mode (マルチエージェント)、`/connections` 管理強化、Plugin discovery 改善 |
+| 1.1.27 | — | Named Restricted Session Scope、FIPS 140、Windows 署名 CLI |
+| 1.1.8 | — | `cortex exec` (CI/CD 非対話実行)、`cortex workspace`、Restricted Session Scope |
+| 1.0.77 | — | `/changelog`、`/sql-writes`、`/mcp` マネージャー刷新、`/index` 全文検索 |
+| 1.0.65 | — | Plugin マーケットプレイス、ランタイム Plugin リフレッシュ |
+| 1.0.59 | — | Postgres 接続と SQL ワークフロー、ACP エディタ連携 |
+
+### CoCo in Snowsight (2026年4月〜)
+
+| 日付 | 機能 | フェーズ |
+|------|------|---------|
+| 2026-08-27 | Subagents | GA |
+| 2026-08-20 | Restrict this chat (RSS) | Private Preview |
+| 2026-08-14 | Automations | Private Preview |
+| 2026-08-10 | Per-turn file changes summary | GA |
+| 2026-08-04 | Agent-requested plan mode | GA |
+| 2026-07-22 | Concurrent chats and fullscreen / Cloud Agents | GA |
+| 2026-07-07 | Conversation sharing | GA |
+| 2026-06-26 | Automatic context management | GA |
+
+
+### 参考リンク
+
+- [CoCo CLI Changelog](https://docs.snowflake.com/en/user-guide/cortex-code/changelog)
+- [CoCo in Snowsight Changelog](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-snowsight/changelog)
+- [CoCo Desktop Release Notes](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-desktop/release-notes)
+- [CoCo CLI Reference](https://docs.snowflake.com/en/user-guide/cortex-code/cli-reference)
+- [Overview of Snowflake CoCo](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code)
+
+
 ## ライセンス
 
 Apache License 2.0
