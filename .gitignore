@@ -30,3 +30,5 @@ Thumbs.db
 # Demo runbooks and prompts (internal only)
 **/demo/runbook.md
 **/demo/live_prompts.md
+
+demo_flow.md

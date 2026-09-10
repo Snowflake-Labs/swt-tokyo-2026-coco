@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS POLICY_DOCUMENTS (
     updated_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
 ) COMMENT = 'Fraud policy and investigation documents (demo2)';
 
--- Cortex Search Service
+-- Cortex Search Service (CREATE OR REPLACE: no IF NOT EXISTS for search services)
 CREATE OR REPLACE CORTEX SEARCH SERVICE FRAUD_POLICY_SEARCH
     ON content
     ATTRIBUTES doc_type, title
@@ -32,7 +32,7 @@ AS (
     FROM POLICY_DOCUMENTS
 );
 
--- Semantic View for Cortex Analyst
+-- Semantic View (CREATE OR REPLACE: no IF NOT EXISTS for semantic views)
 CREATE OR REPLACE SEMANTIC VIEW TSHO_SWT_TOKYO_26.AI.SV_FRAUD_SCORES
   TABLES (
     scores AS TSHO_SWT_TOKYO_26.FRAUD.FRAUD_SCORES_ENRICHED
@@ -48,15 +48,15 @@ CREATE OR REPLACE SEMANTIC VIEW TSHO_SWT_TOKYO_26.AI.SV_FRAUD_SCORES
   DIMENSIONS (
     scores.transaction_id AS transaction_id COMMENT = 'Unique transaction ID',
     scores.customer_id AS customer_id COMMENT = 'Customer UUID',
-    scores.prediction_dim AS prediction COMMENT = '0=legitimate, 1=fraud',
+    scores.prediction AS prediction COMMENT = '0=legitimate, 1=fraud',
     scores.model_version AS model_version COMMENT = 'Model version',
     scores.txn_country AS txn_country COMMENT = 'Transaction country',
     scores.channel AS channel COMMENT = 'Channel (web, mobile, pos, atm)',
     scores.customer_segment AS customer_segment COMMENT = 'Customer segment',
     scores.merchant_category AS merchant_category COMMENT = 'Merchant category',
     scores.merchant_risk_level AS merchant_risk_level COMMENT = 'Merchant risk (low/medium/high)',
-    scores.country_changed AS country_changed_flag COMMENT = 'Cross-border flag',
-    scores.high_risk_merchant AS high_risk_merchant_flag COMMENT = 'High-risk merchant flag'
+    scores.country_changed_flag AS country_changed_flag COMMENT = 'Cross-border flag',
+    scores.high_risk_merchant_flag AS high_risk_merchant_flag COMMENT = 'High-risk merchant flag'
   )
   METRICS (
     scores.total_fraud_count AS SUM(scores.fraud_score) COMMENT = 'Sum of fraud scores',
@@ -65,7 +65,7 @@ CREATE OR REPLACE SEMANTIC VIEW TSHO_SWT_TOKYO_26.AI.SV_FRAUD_SCORES
   )
   COMMENT = 'Fraud scores semantic view for Cortex Agent (demo2)';
 
--- Cortex Agent
+-- Cortex Agent (CREATE OR REPLACE: no IF NOT EXISTS for agents)
 CREATE OR REPLACE AGENT TSHO_SWT_TOKYO_26.AI.FRAUD_INVESTIGATOR
   COMMENT = 'Fraud investigation agent (demo2)'
   FROM SPECIFICATION
@@ -100,3 +100,6 @@ CREATE OR REPLACE AGENT TSHO_SWT_TOKYO_26.AI.FRAUD_INVESTIGATOR
 
 -- Commit version for lineage registration
 ALTER AGENT TSHO_SWT_TOKYO_26.AI.FRAUD_INVESTIGATOR COMMIT;
+
+-- Recreate LIVE version so Snowsight Preview tab works
+ALTER AGENT TSHO_SWT_TOKYO_26.AI.FRAUD_INVESTIGATOR ADD LIVE VERSION FROM LAST;
