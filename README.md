@@ -158,7 +158,9 @@ snow sql -c <Connection Name> -f demo2/setup/99_cleanup.sql
 
 ---
 
-## CoCo スラッシュコマンド一覧
+## CoCo CLI スラッシュコマンドから一部一覧 (2026/9/24時点)
+
+NOTE: CoCo CLIだけでなく、CoCo Desktop, CoCo Snowsightでも使えるコマンドはあります。
 
 | コマンド | 説明 |
 |----------|------|
@@ -166,7 +168,8 @@ snow sql -c <Connection Name> -f demo2/setup/99_cleanup.sql
 | `/changelog` | CLI のリリースノート表示 |
 | `/connections` | Snowflake 接続の確認・追加・編集・削除 |
 | `/model` | 使用するモデルの選択 |
-| `/sql-writes on\|off\|status` | SQL 書き込みの制御 |
+| `/sql-author` | SQL 作成スキルの呼び出し |
+| `/sql-readonly` | SQL 読み取り専用モードの切り替え |
 | `/clear` | 会話をリセット（新規セッション開始） |
 | `/cls` | 画面のみクリア（会話は維持） |
 | `/resume` | 過去セッションの復元 |
@@ -180,7 +183,7 @@ snow sql -c <Connection Name> -f demo2/setup/99_cleanup.sql
 | `/fork` | 会話を分岐 |
 | `/rewind` | 会話を巻き戻し（Esc+u で undo） |
 | `/import-claude-config` | Claude Code の設定を取り込み |
-| `/automations` | 自動化タスクの管理 |
+| `/automation` | 自動化タスクの管理 |
 
 ## CoCo 主要更新 (2026年4月〜)
 
